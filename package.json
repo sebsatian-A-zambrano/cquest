@@ -1,0 +1,8 @@
+{
+  "name": "cquest",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:save": "node --test test/save_merge.test.mjs"
+  }
+}

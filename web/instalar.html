@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101526">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="CQuest">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/Icon-192.png">
+<title>Instalar CQuest</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,sans-serif;background:#101526;color:#f7f2ff}
+body{margin:0;padding:28px 22px 40px}main{max-width:560px;margin:5vh auto}
+.star{color:#ffcf94;font-size:40px}h1{font-size:38px;letter-spacing:-1.5px;margin:12px 0}
+p,li{line-height:1.65;color:#c3cce1}li{margin:9px 0}
+.status{padding:16px;border:1px solid #45516a;border-radius:12px;background:#1b253d;margin:22px 0}
+a,button{font:inherit;font-weight:650;color:#101526;background:#9de7cb;border:0;border-radius:10px;padding:13px 18px;text-decoration:none;display:inline-block;cursor:pointer}
+a.secondary{color:#c5d6eb;background:#27314a}button[hidden]{display:none}
+nav{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0}
+a:focus-visible,button:focus-visible{outline:3px solid #ffcf94;outline-offset:4px}
+small{color:#aab8d3;line-height:1.6;display:block}
+</style>
+</head>
+<body><main>
+<div class="star" aria-hidden="true">✦</div>
+<h1>Lleva CQuest contigo</h1>
+<p>Guarda la aventura en tu pantalla de inicio y juega en tu celular.</p>
+<div class="status" id="status" role="status">Descargando los escenarios y el laboratorio para jugar sin conexión. Mantén esta página abierta.</div>
+<button id="install" hidden>Instalar CQuest</button>
+<ol>
+<li><strong>Android</strong> · Abre este enlace en Chrome y usa su menú para instalar la aplicación o añadirla a la pantalla de inicio.</li>
+<li><strong>iPhone</strong> · Abre el enlace en Safari, toca Compartir y elige Añadir a pantalla de inicio.</li>
+<li>Espera el mensaje de descarga completa antes de desconectarte. La primera descarga ocupa unos 70 MB.</li>
+</ol>
+<p>La partida se queda en este dispositivo. Usa «Mi partida» para descargar una copia e importarla en otro celular o computadora.</p>
+<nav><a href="./">Volver al juego</a><a class="secondary" href="https://github.com/sebsatian-A-zambrano/cquest/releases/latest">Descargas en GitHub</a></nav>
+<small>El ZIP incluye la versión web para computadora. En el celular instala la aplicación desde este enlace.</small>
+</main>
+<script src="cquest-pwa.js"></script>
+<script>
+const install=document.getElementById('install');
+const update=()=>{install.hidden=!window.cquestCanInstall()};
+document.addEventListener('cquest-installable',update);update();
+install.addEventListener('click',async()=>{await window.cquestInstall();update()});
+window.cquestOfflineReady.then(ready=>{
+ document.getElementById('status').textContent=ready
+ ?'Descarga completa. Ya puedes abrir la aventura y el laboratorio sin conexión en este dispositivo.'
+ :'No se completó la descarga. Comprueba la conexión y el espacio disponible, y vuelve a abrir esta página.';
+});
+</script></body></html>

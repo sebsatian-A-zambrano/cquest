@@ -1,0 +1,548 @@
+class Choice {
+  const Choice(this.label, this.feedback);
+  final String label;
+  final String feedback;
+}
+
+class Challenge {
+  const Challenge(this.prompt, this.choices, this.answer, {this.code});
+  final String prompt;
+  final List<Choice> choices;
+  final int answer;
+  final String? code;
+}
+
+class World {
+  const World(
+    this.name,
+    this.topic,
+    this.icon,
+    this.lesson,
+    this.decision,
+    this.practice,
+  );
+  final String name;
+  final String topic;
+  final String icon;
+  final String lesson;
+  final Challenge decision;
+  final Challenge practice;
+}
+
+const worlds = [
+  World(
+    'Isla de los primeros pasos',
+    'Algoritmos y secuencias',
+    '◈',
+    'Un algoritmo es una secuencia finita de pasos claros. Empieza por identificar qué información entra, qué harás con ella y qué resultado debe salir.',
+    Challenge(
+      'La guardiana del puente te pide encender un farol apagado. Encuentras una mecha seca y aceite. ¿En qué orden actúas?',
+      [
+        Choice(
+          'Encender la mecha → llenar el depósito',
+          'La mecha se apaga porque todavía no recibe aceite. Prepara el farol antes de encenderlo.',
+        ),
+        Choice(
+          'Llenar el depósito → impregnar la mecha → encender',
+          'El puente se ilumina. Cada paso dejó listo lo que necesitaba el siguiente.',
+        ),
+        Choice(
+          'Llenar el depósito → cruzar',
+          'El aceite está listo, pero falta la acción que produce la luz.',
+        ),
+      ],
+      1,
+    ),
+    Challenge(
+      'Una máquina recibe 5 cristales y te devuelve el doble. ¿Cuál es la salida?',
+      [
+        Choice('5', 'Eso es la entrada. Aplica primero la operación.'),
+        Choice('2', 'Ese número indica por cuánto multiplicar.'),
+        Choice(
+          '10',
+          'La salida es el resultado del procesamiento: 5 × 2 = 10.',
+        ),
+      ],
+      2,
+      code: 'leer cristales\nresultado ← cristales * 2\nmostrar resultado',
+    ),
+  ),
+  World(
+    'Taller de las variables',
+    'Tipos, asignación, entrada y salida',
+    '◇',
+    'Una variable guarda un valor que puede cambiar. Una asignación calcula primero lo que está a la derecha y guarda el resultado a la izquierda.',
+    Challenge(
+      'La mecánica del taller te pide registrar 2,5 litros de combustible. ¿En qué casilla lo guardas?',
+      [
+        Choice(
+          'En una variable de tipo real',
+          'La máquina conserva los 2,5 litros, incluida la parte decimal.',
+        ),
+        Choice(
+          'En una variable entera',
+          'Una variable entera no conserva la parte decimal.',
+        ),
+        Choice(
+          'En una condición verdadera o falsa',
+          'Una condición lógica guarda un estado, no una cantidad.',
+        ),
+      ],
+      0,
+    ),
+    Challenge(
+      '¿Qué número anuncia el contador?',
+      [
+        Choice('7', 'La segunda asignación actualiza el valor de energía.'),
+        Choice('10', 'La asignación suma 3 al valor anterior y guarda 10.'),
+        Choice('3', 'El 3 es lo que se añade al 7.'),
+      ],
+      1,
+      code: 'energia ← 7\nenergia ← energia + 3\nmostrar energia',
+    ),
+  ),
+  World(
+    'Puerta de los guardianes',
+    'Condicionales y operadores lógicos',
+    '⌐',
+    'Una condición decide qué acción se ejecuta. Con Y, ambas condiciones deben cumplirse. Con O, basta con que se cumpla una.',
+    Challenge(
+      'La puerta solo abre con una llave y al menos 3 gemas. Tienes la llave y 2 gemas. ¿Qué haces?',
+      [
+        Choice(
+          'Cruzar, porque ya tienes la llave',
+          'La puerta detecta la llave, pero falta una gema.',
+        ),
+        Choice(
+          'Cambiar la llave por dos gemas',
+          'Tendrías suficientes gemas, pero la cerradura seguiría necesitando la llave.',
+        ),
+        Choice(
+          'Recoger una gema y conservar la llave',
+          'La cerradura abre. La llave y la cantidad mínima se cumplen a la vez.',
+        ),
+      ],
+      2,
+    ),
+    Challenge(
+      'Si energia vale 4, ¿qué muestra el algoritmo?',
+      [
+        Choice('Seguir', 'El límite incluye el 4 porque el operador es ≥.'),
+        Choice('Descansar', 'Para descansar tendría que ser menor que 4.'),
+        Choice(
+          'Ambos mensajes',
+          'En un si/sino solo se toma una de las dos ramas.',
+        ),
+      ],
+      0,
+      code: 'si energia ≥ 4 entonces\n  mostrar "Seguir"\nsino\n  mostrar "Descansar"',
+    ),
+  ),
+  World(
+    'Bosque de las vueltas',
+    'Repetición, contadores y condiciones de parada',
+    '↻',
+    'Un bucle repite un bloque. Usa un contador si conoces cuántas vueltas necesitas y revisa que la condición de parada pueda cumplirse.',
+    Challenge(
+      'Cinco balizas iguales tienen que encenderse una vez cada una. ¿Qué instrucción le das al robot?',
+      [
+        Choice(
+          'Repite siempre: enciende la siguiente baliza',
+          'El robot seguiría buscando balizas después de encender las cinco.',
+        ),
+        Choice(
+          'Repite 5 veces: enciende la siguiente baliza',
+          'Las cinco luces se encienden y el robot se detiene.',
+        ),
+        Choice(
+          'Enciende la primera baliza cinco veces',
+          'Quedarían cuatro balizas apagadas. Avanza en cada vuelta.',
+        ),
+      ],
+      1,
+    ),
+    Challenge(
+      '¿Qué valores salen por pantalla?',
+      [
+        Choice(
+          '0, 1, 2, 3',
+          'Cuando i vale 3, la comparación i < 3 ya es falsa.',
+        ),
+        Choice('1, 2, 3', 'La primera vuelta empieza con i en 0.'),
+        Choice('0, 1, 2', 'Esos son los tres valores que cumplen i < 3.'),
+      ],
+      2,
+      code: 'i ← 0\nmientras i < 3\n  mostrar i\n  i ← i + 1',
+    ),
+  ),
+  World(
+    'Puerto de los inventarios',
+    'Vectores y registros',
+    '▤',
+    'Un vector reúne elementos del mismo tipo. Un registro agrupa campos relacionados aunque sus tipos sean distintos.',
+    Challenge(
+      'Cada viajera necesita una ficha con nombre, edad y si tiene permiso. ¿Qué estructura eliges para una ficha?',
+      [
+        Choice(
+          'Un registro con tres campos',
+          'La ficha guarda un texto, un entero y un valor lógico de la misma persona.',
+        ),
+        Choice(
+          'Un vector de enteros',
+          'El vector no puede representar directamente el nombre y el permiso con sus tipos propios.',
+        ),
+        Choice(
+          'Una variable lógica',
+          'Podría guardar el permiso, pero perdería los demás campos.',
+        ),
+      ],
+      0,
+    ),
+    Challenge(
+      'Este vector usa índices desde 0. ¿Qué valor guarda la posición 1?',
+      [
+        Choice('8', 'El 8 está en la posición 0, la primera.'),
+        Choice('3', 'La posición 1 es la segunda, donde está el 3.'),
+        Choice('9', 'El 9 está en la posición 2.'),
+      ],
+      1,
+      code: 'carga ← [8, 3, 9]\nmostrar carga[1]',
+    ),
+  ),
+  World(
+    'Jardines en cuadrícula',
+    'Matrices, filas y columnas',
+    '▦',
+    'Una matriz organiza datos por filas y columnas. Dos bucles anidados permiten visitar todas las casillas, una fila a la vez.',
+    Challenge(
+      'Hay un jardín con 3 filas, cada una con 4 plantas. ¿Cuántas plantas visitas si recorres cada casilla una vez?',
+      [
+        Choice(
+          '7',
+          'Sumar las dimensiones no cuenta todas las plantas de cada fila.',
+        ),
+        Choice('4', 'Eso solo cuenta una fila.'),
+        Choice('12', 'Tres filas de cuatro plantas dan 3 × 4 = 12.'),
+      ],
+      2,
+    ),
+    Challenge(
+      'Los índices empiezan en 0 y el primero indica la fila. ¿Qué valor hay en terreno[1][0]?',
+      [
+        Choice(
+          '7',
+          'Fila 1 es la segunda y columna 0 es la primera de esa fila.',
+        ),
+        Choice('6', 'Esta es la fila 0, columna 1.'),
+        Choice('4', 'Esta es la fila 0, columna 0.'),
+      ],
+      0,
+      code: 'terreno ← [[4, 6],\n           [7, 2]]',
+    ),
+  ),
+  World(
+    'Faro de las rutinas',
+    'Subrutinas, parámetros y funciones',
+    '✧',
+    'Una subrutina agrupa pasos que puedes reutilizar. Una función con retorno entrega un valor para continuar el cálculo.',
+    Challenge(
+      'Varias personas necesitan calcular tarifas con cantidades distintas. ¿Cómo evitas copiar el cálculo?',
+      [
+        Choice(
+          'Repetir la fórmula en cada pantalla',
+          'Si la tarifa cambia, tendrás que corregir varias copias.',
+        ),
+        Choice(
+          'Crear una función que reciba la cantidad y devuelva el coste',
+          'El faro comparte el mismo cálculo con todas las pantallas.',
+        ),
+        Choice(
+          'Guardar siempre la última tarifa calculada',
+          'La tarifa anterior puede corresponder a otra cantidad.',
+        ),
+      ],
+      1,
+    ),
+    Challenge(
+      '¿Qué muestra la llamada a la función?',
+      [
+        Choice('4', 'Es el parámetro, el valor que entra en la función.'),
+        Choice('2', 'Es el factor de la operación.'),
+        Choice('8', 'La función recibe 4 y devuelve el resultado de 4 × 2.'),
+      ],
+      2,
+      code: 'funcion doble(n)\n  devolver n * 2\n\nmostrar doble(4)',
+    ),
+  ),
+  World(
+    'Forja de C',
+    'main, tipos, compilación y salida',
+    '⚒',
+    'En un programa típico de C, main es el punto de entrada. #include <stdio.h> permite declarar funciones como printf. El compilador comprueba la sintaxis y traduce el código.',
+    Challenge(
+      'La forja rechaza tu programa y señala la instrucción printf. Falta el punto y coma al final. ¿Qué haces?',
+      [
+        Choice(
+          'Añadir el punto y coma y compilar de nuevo',
+          'La instrucción ahora termina correctamente y la forja puede continuar.',
+        ),
+        Choice(
+          'Cambiar el texto que aparece entre comillas',
+          'El mensaje no arregla la sintaxis de la instrucción.',
+        ),
+        Choice(
+          'Quitar main',
+          'main es el punto de entrada. El problema está en la instrucción incompleta.',
+        ),
+      ],
+      0,
+    ),
+    Challenge(
+      '¿Qué muestra este programa?',
+      [
+        Choice(
+          'La palabra gemas',
+          'El formato %d imprime el valor entero de la variable.',
+        ),
+        Choice('4', 'printf sustituye %d por el valor entero 4.'),
+        Choice(
+          '0',
+          'El 0 de return es el estado de salida, no el valor impreso.',
+        ),
+      ],
+      1,
+      code: '#include <stdio.h>\n\nint main(void) {\n  int gemas = 4;\n  printf("%d\\n", gemas);\n  return 0;\n}',
+    ),
+  ),
+  World(
+    'Mercado de las fórmulas',
+    'Expresiones, scanf y funciones de biblioteca',
+    '✦',
+    'scanf puede leer un valor y guardarlo en la dirección de una variable. Para funciones matemáticas como sqrt usa math.h; revisa también el tipo de cada operación.',
+    Challenge(
+      'El tendero introduce un número entero. La variable int piezas ya está declarada. ¿Cómo guardas el dato?',
+      [
+        Choice(
+          'printf("%d", piezas);',
+          'printf escribe una salida. Aquí necesitas leer.',
+        ),
+        Choice(
+          'scanf("%d", piezas);',
+          'Para recibir el entero, scanf necesita la dirección de piezas.',
+        ),
+        Choice(
+          'scanf("%d", &piezas);',
+          'Con una entrada válida, scanf guarda el entero en piezas usando su dirección.',
+        ),
+      ],
+      2,
+    ),
+    Challenge(
+      '¿Qué muestra printf en este fragmento?',
+      [
+        Choice(
+          '2',
+          'Como ambos operandos son enteros, 5 / 2 descarta la parte fraccionaria.',
+        ),
+        Choice(
+          '2.5',
+          'Para obtener 2.5, al menos un operando debe ser de punto flotante.',
+        ),
+        Choice(
+          '3',
+          'La división entera no redondea el resultado al entero más cercano.',
+        ),
+      ],
+      0,
+      code: 'int porciones = 5 / 2;\nprintf("%d", porciones);',
+    ),
+  ),
+  World(
+    'Cruce de las señales',
+    'if, else, switch y comparación',
+    '⌘',
+    'if evalúa una condición. switch resulta útil al elegir entre valores discretos. En C, == compara y = asigna.',
+    Challenge(
+      'La baliza abre la ruta solo cuando modo vale 2. ¿Qué condición escribes?',
+      [
+        Choice(
+          'if (modo = 2)',
+          'Aquí asignas 2 a modo. Hace falta comparar los valores.',
+        ),
+        Choice(
+          'if (modo == 2)',
+          'La baliza comprueba el valor sin cambiar modo.',
+        ),
+        Choice(
+          'if (modo != 2)',
+          'Esto abre la ruta cuando modo es distinto de 2.',
+        ),
+      ],
+      1,
+    ),
+    Challenge(
+      '¿Qué se imprime con modo igual a 2?',
+      [
+        Choice('A', 'El primer caso solo coincide cuando modo es 1.'),
+        Choice(
+          'BC',
+          'El break del caso 2 evita que se ejecute también default.',
+        ),
+        Choice('B', 'Se ejecuta el caso 2 y break termina el switch.'),
+      ],
+      2,
+      code: 'switch (modo) {\n  case 1: printf("A"); break;\n  case 2: printf("B"); break;\n  default: printf("C");\n}',
+    ),
+  ),
+  World(
+    'Relojería de los ciclos',
+    'for, while y do-while',
+    '◷',
+    'for reúne inicio, condición y actualización. while comprueba antes de ejecutar el bloque; do-while lo ejecuta al menos una vez.',
+    Challenge(
+      'El relojero quiere mostrar un menú al menos una vez antes de decidir si repite. ¿Qué bucle encaja directamente?',
+      [
+        Choice(
+          'do-while',
+          'El menú aparece primero y la condición se comprueba después.',
+        ),
+        Choice(
+          'while con condición inicial falsa',
+          'El cuerpo del bucle se saltaría por completo.',
+        ),
+        Choice('for con cero iteraciones', 'El menú no se mostraría.'),
+      ],
+      0,
+    ),
+    Challenge(
+      '¿Cuántas veces imprime un asterisco este código?',
+      [
+        Choice('3', 'La condición usa <=, así que el valor 3 también entra.'),
+        Choice('4', 'El cuerpo se ejecuta para i = 0, 1, 2 y 3.'),
+        Choice('5', 'Para i = 4 la condición ya es falsa.'),
+      ],
+      1,
+      code: 'for (int i = 0; i <= 3; i++) {\n  printf("*");\n}',
+    ),
+  ),
+  World(
+    'Archivo de los artefactos',
+    'Arrays, strings, matrices y structs',
+    '▣',
+    'En C los índices de un array empiezan en 0. Una cadena de C termina en el carácter nulo. Una struct reúne campos y permite acceder a ellos con un punto.',
+    Challenge(
+      'El archivo guarda nombre y cantidad de cada artefacto. ¿Qué estructura representa bien el inventario completo?',
+      [
+        Choice(
+          'Un solo char',
+          'Un carácter no guarda todos los datos de un artefacto.',
+        ),
+        Choice(
+          'Un array de int para todos los datos',
+          'Puedes guardar cantidades, pero el nombre requiere una representación propia.',
+        ),
+        Choice(
+          'Un array de struct con nombre y cantidad',
+          'Cada posición conserva juntos el nombre y la cantidad de su artefacto.',
+        ),
+      ],
+      2,
+    ),
+    Challenge(
+      '¿Cuántos elementos ocupa este array de caracteres, incluido el terminador?',
+      [
+        Choice(
+          '4',
+          'Sol ocupa tres letras y el terminador nulo ocupa una posición adicional.',
+        ),
+        Choice(
+          '3',
+          'Esa es la cantidad de letras visibles. El terminador también ocupa espacio.',
+        ),
+        Choice('5', 'Las comillas delimitan el literal y no se almacenan.'),
+      ],
+      0,
+      code: 'char nombre[] = "Sol";',
+    ),
+  ),
+  World(
+    'Biblioteca del viajero',
+    'Funciones y manejo de archivos',
+    '▥',
+    'Las funciones separan responsabilidades y devuelven resultados. En C, fopen puede fallar. Comprueba el puntero devuelto y cierra con fclose los archivos que sí se abrieron.',
+    Challenge(
+      'La bibliotecaria quiere añadir una línea al final de bitacora.txt y conservar el contenido. ¿Qué modo eliges?',
+      [
+        Choice('"w"', 'El modo w puede truncar el archivo existente.'),
+        Choice(
+          '"a"',
+          'El modo a escribe al final y conserva las entradas previas.',
+        ),
+        Choice('"r"', 'El modo r abre para lectura.'),
+      ],
+      1,
+    ),
+    Challenge(
+      'Si fopen devuelve NULL, ¿qué debe hacer la función?',
+      [
+        Choice(
+          'Llamar a fprintf con f',
+          'No hay un archivo abierto al que escribir.',
+        ),
+        Choice(
+          'Llamar a fclose con f y seguir',
+          'Un puntero nulo no se cierra con fclose.',
+        ),
+        Choice(
+          'Informar del problema y salir de la función',
+          'La función evita usar un archivo que no pudo abrir.',
+        ),
+      ],
+      2,
+      code: 'FILE *f = fopen("bitacora.txt", "a");\nif (f == NULL) {\n  /* ¿Qué hacemos aquí? */\n}',
+    ),
+  ),
+  World(
+    'Cumbre de las llamadas',
+    'Recursividad y desafío integrador',
+    '✺',
+    'Una función recursiva resuelve un caso pequeño llamándose con un problema cada vez menor. Un caso base devuelve un resultado directo y detiene las llamadas.',
+    Challenge(
+      'En la cumbre quieres contar artefactos de cajas dentro de otras cajas. ¿Cuándo debe detenerse cada rama?',
+      [
+        Choice(
+          'Cuando la caja no tiene cajas internas',
+          'Puedes contar su contenido directo y devolverlo. Las demás cajas siguen su propio recorrido.',
+        ),
+        Choice(
+          'Cuando encuentra una caja interna',
+          'Dejarías sin visitar la caja interna y lo que contiene.',
+        ),
+        Choice(
+          'Nunca, porque la búsqueda es recursiva',
+          'Una llamada siempre necesita llegar a un caso que no vuelva a llamarse.',
+        ),
+      ],
+      0,
+    ),
+    Challenge(
+      '¿Qué devuelve suma(3)?',
+      [
+        Choice(
+          '3',
+          'El primer 3 se suma a lo que devuelven las llamadas siguientes.',
+        ),
+        Choice(
+          '6',
+          'Las llamadas suman 3 + 2 + 1 y suma(0) detiene la recursión.',
+        ),
+        Choice(
+          '0',
+          'Cero es el resultado del caso base, que luego vuelve a las llamadas anteriores.',
+        ),
+      ],
+      1,
+      code: 'int suma(int n) {\n  if (n == 0) return 0;\n  return n + suma(n - 1);\n}\n\nsuma(3);',
+    ),
+  ),
+];

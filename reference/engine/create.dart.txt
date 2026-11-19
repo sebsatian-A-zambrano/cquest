@@ -1,0 +1,12 @@
+// El motor que se crea depende de la plataforma.
+//
+// En móvil y en escritorio se usa el de WebAssembly, que necesita `dart:ffi`.
+// En la web, `dart:ffi` no existe: el navegador no deja abrir bibliotecas
+// nativas. Por eso el motor nativo va en un fichero aparte que solo se
+// compila donde `dart:ffi` está disponible, y la web recibe el stub.
+//
+// El truco es la exportación condicional: Dart compila solo el fichero que
+// corresponde a la plataforma, y el otro ni se analiza. Si intentara importar
+// `wasm_engine.dart` desde aquí sin condición, el build web fallaría con
+// «Dart library 'dart:ffi' is not available on this platform» antes de arrancar.
+export 'create_native.dart' if (dart.library.js_interop) 'create_web.dart';

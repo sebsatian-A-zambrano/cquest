@@ -1,0 +1,61 @@
+import 'package:cquest_core/src/engine/c_engine.dart';
+import 'package:cquest_core/src/engine/models.dart';
+
+/// En la web no hay `dart:ffi`, y sin `dart:ffi` no se puede cargar la
+/// biblioteca del motor, que es la única forma de ejecutar C dentro de un
+/// móvil o de un portátil.
+///
+/// ## Qué hace este motor
+///
+/// Nada. Devuelve `CompileUnavailable` con un motivo claro, y el jugador ve en
+/// pantalla «compilación no disponible en el navegador». No es un fallo de
+/// diseño: es la realidad de la web. Un navegador no puede abrir un `.dll` ni
+/// un `.so`, y el compilador de C del proyecto es un binario nativo de 600 MB.
+///
+/// ## Qué queda por hacer para tener C de verdad en la web
+///
+/// Tres caminos, ninguno trivial:
+///
+///  1. **Compilar el motor a WebAssembly** y llamarlo desde JavaScript. El
+///     motor ya está en C, así que se puede compilar con clang a wasm32, y el
+///     navegador lo ejecuta sin wasm3. Lo que falta es el compilador del
+///     alumno, que sigue siendo un binario nativo.
+///  2. **Enviar el código a un servicio** que compile y devuelva el `.wasm`.
+///     Funciona, pero depende de red y de un tercero, y el proyecto dijo
+///     «sin presupuesto».
+///  3. **Shippear un compilador de C en WebAssembly** (clang.wasm o chibicc
+///     compilado a wasm). Es lo que haría la web idéntica a la app, y es un
+///     proyecto de semanas.
+///
+/// Mientras tanto, las clases, las tarjetas de concepto, la demo y el códex
+/// funcionan enteros en la web: solo los retos no se pueden ejecutar. El
+/// jugador lee, entiende y ve la demo correr en su máquina, y luego descarga la
+/// app o abre el escritorio para el reto.
+class NullEngine implements CEngine {
+  @override
+  CEngineTier get engineTier => CEngineTier.validator;
+
+  @override
+  Future<CompileResult> compile(CompileRequest request) async =>
+      CompileUnavailable(
+        requestedTier: CEngineTier.wasm,
+        reason: 'la compilación de C no está disponible en el navegador',
+        fallbackTo: CEngineTier.validator,
+      );
+
+  @override
+  Future<RunResult> run(RunRequest request) async =>
+      RunTrap(detail: 'la compilación de C no está disponible en el navegador');
+
+  @override
+  EngineStatus get status => const EngineStatus(
+        tier: CEngineTier.validator,
+        available: false,
+        compilerName: 'ninguno',
+        compilerVersion: '0',
+        detail: 'compilación de C no disponible en web',
+      );
+
+  @override
+  void dispose() {}
+}

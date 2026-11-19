@@ -1,0 +1,51 @@
+<!doctype html><html lang="es"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101526"><title>Mi partida · CQuest</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,sans-serif;background:#101526;color:#f7f2ff}
+body{margin:0;padding:28px 22px}main{max-width:550px;margin:5vh auto}
+h1{font-size:36px;letter-spacing:-1px}p{line-height:1.6;color:#c3cce1}
+.status{padding:16px;border:1px solid #45516a;background:#1b253d;border-radius:10px;margin:20px 0}
+button,a.link,label.file{display:inline-block;font:inherit;font-weight:650;background:#9de7cb;color:#101526;border:0;border-radius:9px;padding:13px 17px;cursor:pointer;text-decoration:none}
+.secondary{background:#28344e!important;color:#e0e8f9!important}.row{display:flex;gap:9px;flex-wrap:wrap;margin:20px 0}
+a{color:#9de7cb}#message{color:#ffcf94}small{color:#aab8d3;line-height:1.6}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #ffcf94;outline-offset:4px}
+input{display:block;margin:12px 0;font:inherit;max-width:100%}
+</style></head><body><main>
+<a href="./">← Volver al juego</a><h1>Tu partida se queda contigo</h1>
+<p>Se guarda en una base de datos de este navegador, en tu dispositivo. Puedes jugar sin cuenta.</p>
+<div class="status" id="status" role="status">Abriendo la partida…</div>
+<p id="summary"></p><p id="message" role="alert"></p>
+<div class="row"><button id="export">Descargar copia</button><a class="link secondary" href="./">Volver a la aventura</a></div>
+<label for="file">Recuperar una copia de partida (.json)</label>
+<input id="file" type="file" accept=".json,application/json">
+<button id="import" class="secondary">Importar partida</button>
+<p>Para pasar del PC al celular, descarga la copia, envía ese archivo al otro dispositivo e impórtalo aquí. La importación conserva los capítulos que ya completaste.</p>
+<small>Conserva una copia antes de borrar datos del navegador, cambiar de navegador o reinstalar la aplicación.</small>
+</main><script src="cquest-progress.js"></script>
+<script src="cquest-storage.js"></script><script>
+const $=id=>document.getElementById(id);
+function render(){
+ const state=JSON.parse(window.cquestProgressStatus());$('status').textContent=state.message;
+ if(window.cquestSaveSummary){const summary=window.cquestSaveSummary();$('summary').textContent=summary.chapters+' de 28 capítulos cruzados. Tu posición, decisiones y código también se guardan.'}
+}
+window.addEventListener('cquest-save-state',render);
+window.cquestProgressReady.then(render);
+$('export').addEventListener('click',async()=>{
+ await window.cquestProgressReady;
+ const text=await window.cquestExportProgress();
+ const url=URL.createObjectURL(new Blob([text],{type:'application/json'}));
+ const a=document.createElement('a');a.href=url;a.download='cquest-partida-'+new Date().toISOString().slice(0,10)+'.json';a.click();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+ $('message').textContent='Copia preparada. Guárdala donde puedas recuperarla.';
+});
+$('import').addEventListener('click',async()=>{
+ const file=$('file').files[0];
+ if(!file){$('message').textContent='Selecciona primero una copia de partida.';return}
+ try{
+  await window.cquestProgressReady;
+  await window.cquestImportProgress(await file.text());
+  $('message').textContent='Partida recuperada. Puedes volver a la aventura.';render();
+ }catch(error){$('message').textContent=error.message}
+});
+</script></body></html>
